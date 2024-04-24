@@ -9,7 +9,7 @@ const projectSchema = new Schema({
         type: ObjectId,
         ref: 'User'
     },
-    teamMembers: [{
+    teamMembers: [{ // contributers
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],

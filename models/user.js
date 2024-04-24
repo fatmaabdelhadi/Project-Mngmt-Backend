@@ -9,12 +9,32 @@ const User = new Schema({
     },
     email: String,
     password: String,
-    projectRole: [{
-        type: ObjectId,
-        role: String,
-        ref: 'Project'
-    }],
+    role: {
+        managedProjects: [{type: ObjectId, ref: 'Project'}],
+        ContributedTasks: [{type: ObjectId, ref: 'Task'}]
+    },
+    profile: {
+        fullName: String,
+        jobTitle: String,
+        contactInfo: {
+            email: String,
+            phone: String,
+            address: String
+        }
+    },
+    preferences: {
+        theme: String,
+        notifications: {
+            email: Boolean,
+            sms: Boolean
+        }
+    }
     // image: {
     //     type: String
     // }
+},
+{
+    timestamps: true
 })
+
+module.exports = mongoose.model('UserSchema', userSchema)
