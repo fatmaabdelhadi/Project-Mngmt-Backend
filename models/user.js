@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const { ObjectId } = mongoose.Schema.Types
 
-const User = new Schema({
+const userSchema = new Schema({
     username: {
         type: String,
         required: true
