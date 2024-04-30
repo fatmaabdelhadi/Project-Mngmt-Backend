@@ -1,6 +1,7 @@
 
 const userRoute = require('./routes/user.js')
 const projectRoute = require('./routes/project.js')
+const taskRoute = require('./routes/task.js')
 let lodash = require('lodash');
 const express = require('express');
 const app = express();
@@ -11,6 +12,7 @@ dotenv.config()
 
 app.use("/api/users", userRoute)
 app.use("/api/projects", projectRoute)
+app.use("/api/tasks", taskRoute)
 
 mongoose
     .connect(process.env.MONGO_URL)

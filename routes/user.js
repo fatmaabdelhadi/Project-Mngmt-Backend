@@ -1,24 +1,45 @@
-const router = require('express').Router()
+// const router = require('express').Router()
+// const userController = require ('../controllers/user')
 
-const userController = require ('../controllers/user')
-// const projectController = require ('../controllers/project')
+// router.get('/', userController.getAllUserProjects)
+// router.get('/', userController.getAllProjects)
 
-// router.post('/', userController.createUser)
-// router.get('/', userController.getUser)
-// router.get('/', userController.getAllUsers)
-// router.delete('/', userController.deleteUser)
+// router.get("/usertest", (req, res) =>{
+//     res.send("User test")
+// })
 
+// router.post("/userpost", (req, res) =>{
+//     const username = req.body.username
+//     console.log(username)
+// })
+
+// module.exports = router
+
+const express = require('express');
+const router = express.Router();
+
+// Import user controller
+const userController = require('../controllers/user');
+
+// User routes
+router.post('/register', userController.registerUser);
+
+
+router.get('/find/:id', userController.getUser);
+router.get('/email', userController.getUser);
+router.get('/all', userController.getAllUsers);
+
+router.delete('/delete/:id', userController.deleteUser);
+router.put('/update/:id', userController.updateUser);
+
+// Projects
 router.get('/', userController.getAllUserProjects)
+router.get('/', userController.getAllProjects)
 
-router.get("/usertest", (req, res) =>{
-    res.send("User test")
-})
 
-router.post("/userpost", (req, res) =>{
-    const username = req.body.username
-    console.log(username)
-})
+// router.get("/MAF/test",(req,res)=>{
+//     res.send("GET A FUCK OUT OF HERE!");
+// });
 
-// router.get('/:id', projectController.getAllProjects);
 
 module.exports = router
