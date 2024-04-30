@@ -1,7 +1,6 @@
 const User = require("../models/user");
 // const bcrypt = require('bcrypt');
 
-// exports.registerUser = async (req, res) => {
 const registerUser = async (req, res) => {
   // Validate input
   const { username, email, password } = req.body;
@@ -78,7 +77,6 @@ const registerUser = async (req, res) => {
 //   }
 // };
 
-// exports.getUser = async(req,res)=>{
 const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
