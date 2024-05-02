@@ -2,8 +2,9 @@ const { identity } = require('lodash');
 const Project = require('../models/project'); // Import your Project model
 
 const createProject = async (req, res) => {
-    const { projectName, description, projectManager, teamMembers, startDate, endDate } = req.body;
-    const project = await new Project({ projectName, description, projectManager, teamMembers, startDate, endDate }).save();
+    // const { projectName, description, projectManager, teamMembers, startDate, endDate } = req.body;
+    // const project = await new Project({ projectName, description, projectManager, teamMembers, startDate, endDate }).save();
+    const project = await new Project(req.body).save();
 
     if (project) res.json(project);
 };
