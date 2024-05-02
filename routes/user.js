@@ -1,21 +1,3 @@
-// const router = require('express').Router()
-// const userController = require ('../controllers/user')
-
-// router.get('/', userController.getAllUserProjects)
-// router.get('/', userController.getAllProjects)
-
-// router.get("/usertest", (req, res) =>{
-//     res.send("User test")
-// })
-
-// router.post("/userpost", (req, res) =>{
-//     const username = req.body.username
-//     console.log(username)
-// })
-
-//LOL
-// module.exports = router
-
 const express = require('express');
 const router = express.Router();
 
@@ -44,5 +26,3 @@ router.get('/', userController.getAllProjects)
 
 
 module.exports = router
-
-// fatma
