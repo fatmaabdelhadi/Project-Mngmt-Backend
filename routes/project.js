@@ -10,9 +10,9 @@ const express = require('express');
 const router = express.Router();
 const projectController = require('../controllers/project');
 
-router.post('/', projectController.createProject);
-router.get('/:id', projectController.getProject);
-router.post('/:id', projectController.updateProject)
-router.delete('/:id', projectController.deleteProject)
+router.post('/create', projectController.createProject);
+router.get('/find/:id', projectController.getProject);
+router.post('/update/:id', projectController.updateProject)
+router.delete('/delete/:id', projectController.deleteProject)
 
 module.exports = router;

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
 
-const projectSchema = new Schema({
+const Project = new Schema({
     projectName: String,
     description: String,
     projectManager: {
@@ -32,4 +32,4 @@ const projectSchema = new Schema({
     timestamps: true
 })
 
-module.exports = mongoose.model('ProjectSchema', projectSchema)
+module.exports = mongoose.model('project', Project)

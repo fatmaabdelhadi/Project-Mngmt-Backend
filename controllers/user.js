@@ -19,33 +19,7 @@ const registerUser = async (req, res) => {
   // const hashedPassword = await bcrypt.hash(password, salt);
 
   // Create a new user instance
-  const user = new User({
-    username,
-    email,
-    password: hashedPassword,
-    role: {
-      managedProjects: [],
-      contributedTasks: [],
-    },
-    profile: {
-      full_name: "",
-      job_title: "",
-      contact_info: {
-        email: "",
-        phone: "",
-        address: "",
-      },
-    },
-    preferences: {
-      theme: "light",
-      notifications: {
-        email: true,
-        sms: false,
-      },
-    },
-    created_at: new Date(),
-    updated_at: new Date(),
-  });
+  const user = new User(req.body);
 
   try {
     // Save the new user to the database
@@ -60,23 +34,6 @@ const registerUser = async (req, res) => {
 };
 
 //get user by id
-
-// exports.getUser = async (req, res) => {
-//   const query = req.query.new;
-//   try {
-//     const user = query
-//     ? await User.findById(req.params.id)
-//     : await User.findById(req.params.id);
-
-//     if (!user) return res.status(404).send('User not found');
-
-//     // Send a success response
-//     res.status(200).json(user);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// };
-
 const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -85,31 +42,6 @@ const getUser = async (req, res) => {
     rea.status(500).json(error);
   }
 };
-
-// exports.getUser = async (req, res) => {
-//   try {
-//     // Get the user ID from the request parameters
-//     const userId = req.params.id;
-
-//     // Find the user by ID
-//     const user = await User.findById(userId);
-
-//     // Check if the user was found
-//     if (!user) {
-//       return res.status(404).send('User not found');
-//     }
-
-//     // Remove password and updated_at fields from the response
-//     user.password = undefined;
-//     user.updated_at = undefined;
-
-//     // Send a success response
-//     res.send(user);
-//   } catch (error) {
-//     // Send an error response
-//     res.status(500).send('Error retrieving user');
-//   }
-// };
 
 // exports.getAllUsers = async (req, res) => {
 const getAllUsers = async (req, res) => {
