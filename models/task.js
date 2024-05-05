@@ -6,17 +6,28 @@ const { ObjectId } = mongoose.Schema.Types
 const Task = new Schema({
     taskName: String,
     description: String,
-    project: {
+    // project: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Project'
+    // },
+    taskCreator: {
         type: Schema.Types.ObjectId,
-        ref: 'Project'
+        ref: 'User',
     },
-    assignedUser: {
+    assignedUsers: [{
         type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
+        ref: 'User',
+    }],
     status: String,
     priority: String,
+    cost: Number,
+    startDate: Date,
+    endDate: Date,
     dueDate: Date,
+    dependancy: {
+        type: Schema.Types.ObjectId,
+        ref: 'Task'
+    },
     comments: [
         {
             user: { type: ObjectId, ref: 'User' },

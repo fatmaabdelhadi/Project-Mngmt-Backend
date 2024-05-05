@@ -48,7 +48,6 @@ const getProject = async (req, res) => {
 
 const deleteProject = async (req, res) => {
   try {
-
     const projectId = req.params.id;
     const project = await Project.findByIdAndDelete(projectId);
     if (!project) {
@@ -82,14 +81,14 @@ const deleteProject = async (req, res) => {
 
 // // abdo's
 const updateProject = async (req, res) => {
-    try {
-      const project = await Project.findByIdAndUpdate(req.params.id, req.body, {new: true});
-      if (!project) return res.status(404).send("Project not found");
-      res.send(project);
-    } catch (error) {
-      res.status(500).send("Error updating project");
-    }
-  };
+  try {
+    const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!project) return res.status(404).send("Project not found");
+    res.send(project);
+  } catch (error) {
+    res.status(500).send("Error updating project");
+  }
+};
 
 // // Function to update a project by ID
 // const updateProject = async (req, res) => {
