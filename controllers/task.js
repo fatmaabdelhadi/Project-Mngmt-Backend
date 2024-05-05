@@ -1,13 +1,16 @@
 const req = require('express/lib/request');
 const { task } = require('../routes/task');
+const { ObjectId } = require('mongoose').Types;
+const Task = require("../models/task");
 
 const createTask = async (req,res) =>{
-    const {taskName, taskId, description, projectId, assignedUser, dueDate, comments } = req.body;
+    const {taskName, taskId, description, projectId, assignedUser, dueDate, comments} = req.body;
     const task = await new Task({taskName, taskId, description, projectId, assignedUser, dueDate, comments}).save();
 
     if (task) res.json(task)
 }
-const editTask =  (taskId, updatedTaskInfo) =>{
+
+const updateTask =  (taskId, updatedTaskInfo) =>{
     //const {taskName, description, projectId, assignedUser, dueDate, comments, status, priority } = req.body;
     let taskToUpdate = findTaskById(taskId);
     if (!taskToUpdate) {
@@ -38,16 +41,7 @@ const editTask =  (taskId, updatedTaskInfo) =>{
     taskToUpdate.updatedAt = new Date();
     saveOrUpdateTask(taskToUpdate);
     return "Task is updated successfully";
-
-
 }
-// function findTaskById(taskId) {
-//     // find task by id if not return null
-//}
-
-// function saveOrUpdateTask(taskToUpdate) {    // DO this later
-//     //
-// }
 
 function deleteTask(taskId) {
 
@@ -63,13 +57,6 @@ function deleteTask(taskId) {
 
     return "Task deleted successfully";
 }
-
-// function findTaskIndexById(taskId) {
-//     // Return -1 if the task is not found
-// }
-
-
-// let taskIdToDelete = "123"; // ID of the task you want to delete
 
 // console.log(deleteTask(taskIdToDelete));
 const getTask = async (req, res) => {
@@ -88,7 +75,8 @@ const getTask = async (req, res) => {
 
 module.exports = {
     createTask,
-    editTask,
+    updateTask,
     deleteTask,
-    getTask
-}
+    getTask,
+    updateTask
+};
