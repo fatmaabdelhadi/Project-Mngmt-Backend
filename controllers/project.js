@@ -24,9 +24,14 @@ const createProject = async (req, res) => {
 };
 
 const getProject = async (req, res) => {
-  const id = req.params.id;
-  const project = await Project.findById(id).populate("projectManager")
-  if (project) res.json(project);
+  const id = req.params.id
+  try {
+    const project = await Project.findById(id).populate("projectManager")
+    if (project) res.json(project);
+  } catch (error) {
+    console.error('Error fetching project:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 }
 
 const getAllProjects = async (req, res) => {
