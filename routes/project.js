@@ -7,5 +7,6 @@ router.get('/find/:id', projectController.getProject);
 router.get('/all', projectController.getAllProjects)
 router.put('/update/:id', projectController.updateProject)
 router.delete('/delete/:id', projectController.deleteProject)
+router.get('/user/:userId', projectController.getAllUserProjects) // User Projects
 
 module.exports = router;

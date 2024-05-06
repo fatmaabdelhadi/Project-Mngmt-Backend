@@ -42,6 +42,18 @@ const getTask = async (req, res) => {
     if (task) res.json(task);
 }
 
+
+const getAllUserTasks = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const tasks = await Task.find({ managedTasks: userId });
+        res.status(200).json(tasks);
+    } catch (error) {
+        console.error('Error fetching user tasks:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 const updateTask = async (req, res) => {
     try {
         const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -67,6 +79,7 @@ const deleteTask = async (req, res) => {
 
 module.exports = {
     getTask,
+    getAllUserTasks,
     createTask,
     updateTask,
     deleteTask

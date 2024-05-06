@@ -1,7 +1,7 @@
 const { identity } = require("lodash");
 const Project = require("../models/project");
-const Task = require("../models/task");
-
+const Task = require("../models/task.js")
+const User = require("../models/user.js")
 
 const createProject = async (req, res) => {
   // Validate input
@@ -65,12 +65,28 @@ const updateProject = async (req, res) => {
   } catch (error) {
     res.status(500).send("Error updating project")
   }
-};
+}
+
+const getAllUserProjects = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const projects = await Project.find({ projectManager: userId });
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error('Error fetching user projects:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+module.exports = {
+  getAllUserProjects
+}
 
 module.exports = {
   createProject,
   getProject,
   getAllProjects,
   deleteProject,
-  updateProject
-};
+  updateProject,
+  getAllUserProjects
+}

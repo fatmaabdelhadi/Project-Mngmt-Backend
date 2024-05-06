@@ -1,4 +1,7 @@
-const User = require("../models/user");
+const User = require("../models/user.js")
+const Project = require("../models/project.js")
+const Task = require("../models/task.js")
+
 // const bcrypt = require('bcrypt');
 
 const registerUser = async (req, res) => {
@@ -47,7 +50,7 @@ const getAllUsers = async (req, res) => {
   } catch (error) {
     res.status(500).send("Error retrieving users");
   }
-};
+}
 
 const updateUser = async (req, res) => {
   try {
@@ -69,49 +72,14 @@ const updateUser = async (req, res) => {
 // exports.deleteUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
-    // Get the user ID from the request parameters
-    const userId = req.params.id;
-
-    // Find the user by ID and delete it
+    const userId = req.params.id
     const user = await User.findByIdAndDelete(userId);
-
-    // Check if the user was found and deleted
     if (!user) {
       return res.status(404).send("User not found");
     }
-
-    // Send a success response
-    res.send(user);
+    res.send(user)
   } catch (error) {
-    // Send an error response
-    res.status(500).send("Error deleting user");
-  }
-};
-
-const getAllUserProjects = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await User.findById(id)
-      .populate("role.managedProjects")
-      .populate("role.contributedTasks");
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Extract all the contributed task IDs from the user
-    const contributedTaskIds = user.role.contributedTasks.map(
-      (task) => task._id
-    )
-
-    // Populate the projects for the contributed tasks
-    const projects = await Project.find({ tasks: { $in: contributedTaskIds } });
-
-    // Send the populated projects as response
-    if (projects) res.json(projects);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).send("Error deleting user")
   }
 }
 
@@ -120,6 +88,5 @@ module.exports = {
   getUser,
   getAllUsers,
   updateUser,
-  deleteUser,
-  getAllUserProjects
+  deleteUser
 }
