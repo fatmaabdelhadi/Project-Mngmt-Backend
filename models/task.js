@@ -6,10 +6,10 @@ const { ObjectId } = mongoose.Schema.Types
 const Task = new Schema({
     taskName: String,
     description: String,
-    // project: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Project'
-    // },
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
     taskCreator: {
         type: Schema.Types.ObjectId,
         ref: 'User',
