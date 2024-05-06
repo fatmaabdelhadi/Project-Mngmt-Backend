@@ -18,22 +18,16 @@ const registerUser = async (req, res) => {
   // const salt = await bcrypt.genSalt(10);
   // const hashedPassword = await bcrypt.hash(password, salt);
 
-  // Create a new user instance
   const user = new User(req.body);
 
   try {
-    // Save the new user to the database
     await user.save();
-
-    // Send a success response
     res.send(`User with ID ${user._id} created successfully`);
   } catch (error) {
-    // Send an error response
     res.status(500).send("Error registering user");
   }
 };
 
-//get user by id
 const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -43,7 +37,6 @@ const getUser = async (req, res) => {
   }
 };
 
-// exports.getAllUsers = async (req, res) => {
 const getAllUsers = async (req, res) => {
   const query = req.query.new;
   try {
@@ -56,7 +49,6 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// exports.updateUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -96,14 +88,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const getAllProjects = async (req, res) => {
-  const id = req.params.id;
-  const project = await User.findById(id)
-    .populate("role.managedProjects")
-    .populate("role.contributedTasks");
-  if (project) res.json(Project);
-};
-
 const getAllUserProjects = async (req, res) => {
   try {
     const id = req.params.id;
@@ -118,7 +102,7 @@ const getAllUserProjects = async (req, res) => {
     // Extract all the contributed task IDs from the user
     const contributedTaskIds = user.role.contributedTasks.map(
       (task) => task._id
-    );
+    )
 
     // Populate the projects for the contributed tasks
     const projects = await Project.find({ tasks: { $in: contributedTaskIds } });
@@ -129,7 +113,7 @@ const getAllUserProjects = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-};
+}
 
 module.exports = {
   registerUser,
@@ -137,6 +121,5 @@ module.exports = {
   getAllUsers,
   updateUser,
   deleteUser,
-  getAllProjects,
-  getAllUserProjects,
-};
+  getAllUserProjects
+}
