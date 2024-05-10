@@ -11,7 +11,7 @@ const User = new Schema({
     password: String,
     role: {
         managedProjects: [{type: ObjectId, ref: 'Project'}],
-        ContributedTasks: [{type: ObjectId, ref: 'Task'}]
+        contributedTasks: [{type: ObjectId, ref: 'Task'}]
     },
     profile: {
         fullName: String,

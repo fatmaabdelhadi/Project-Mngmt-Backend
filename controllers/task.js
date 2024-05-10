@@ -18,7 +18,7 @@ const createTask = async (req, res) => {
         dependancy,
         comments,
     } = req.body;
-    if (!taskName || !startDate || !endDate || !dependancy) {
+    if (!taskName || !startDate || !endDate) { // || !dependancy (until we fix in front)
         return res.status(400).send("Missing required fields");
     }
     const existingTask = await Task.findOne({
@@ -42,11 +42,21 @@ const getTask = async (req, res) => {
     if (task) res.json(task);
 }
 
+// const getAllProjectTasks = async (req, res) => {
+//     try {
+//         const projectId = req.params.projectId;
+//         const projectTasks = await Task.find({ tasks: projectId });
+//         res.status(200).json(projectTasks);
+//     } catch (error) {
+//         console.error('Error fetching project tasks:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// }
 
 const getAllUserTasks = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const tasks = await Task.find({ managedTasks: userId });
+        const tasks = await Task.find({ assignedUsers: userId });
         res.status(200).json(tasks);
     } catch (error) {
         console.error('Error fetching user tasks:', error);
@@ -80,6 +90,7 @@ const deleteTask = async (req, res) => {
 module.exports = {
     getTask,
     getAllUserTasks,
+    // getAllProjectTasks,
     createTask,
     updateTask,
     deleteTask
