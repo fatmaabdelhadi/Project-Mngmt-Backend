@@ -42,16 +42,26 @@ const getTask = async (req, res) => {
     if (task) res.json(task);
 }
 
-// const getAllProjectTasks = async (req, res) => {
-//     try {
-//         const projectId = req.params.projectId;
-//         const projectTasks = await Task.find({ tasks: projectId });
-//         res.status(200).json(projectTasks);
-//     } catch (error) {
-//         console.error('Error fetching project tasks:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// }
+const getAllProjectTasks = async (req, res) => {
+    try {
+        const projectId = req.params.projectId;
+        const tasks = await Task.find({ project: projectId });
+        res.status(200).json(tasks);
+    } catch (error) {
+        console.error('Error fetching project tasks:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+const getAllTasks = async (req, res) => {
+    try {
+        const tasks = await Task.find()
+        res.json(tasks);
+    } catch (error) {
+        console.error('Error fetching tasks:', error)
+        res.status(500).json({ error: 'Internal server error' })
+    }
+  }
 
 const getAllUserTasks = async (req, res) => {
     try {
@@ -89,8 +99,9 @@ const deleteTask = async (req, res) => {
 
 module.exports = {
     getTask,
+    getAllTasks,
     getAllUserTasks,
-    // getAllProjectTasks,
+    getAllProjectTasks,
     createTask,
     updateTask,
     deleteTask
