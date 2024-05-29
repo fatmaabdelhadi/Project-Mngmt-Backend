@@ -2,8 +2,6 @@ const User = require("../models/user.js")
 const Project = require("../models/project.js")
 const Task = require("../models/task.js")
 
-// const bcrypt = require('bcrypt');
-
 const registerUser = async (req, res) => {
   // Validate input
   const { username, email, password } = req.body;
@@ -17,10 +15,6 @@ const registerUser = async (req, res) => {
     return res.status(400).send("User already exists");
   }
 
-  // // Hash password
-  // const salt = await bcrypt.genSalt(10);
-  // const hashedPassword = await bcrypt.hash(password, salt);
-
   const user = new User(req.body);
 
   try {
@@ -29,7 +23,7 @@ const registerUser = async (req, res) => {
   } catch (error) {
     res.status(500).send("Error registering user");
   }
-};
+}
 
 const getUser = async (req, res) => {
   try {
@@ -38,7 +32,7 @@ const getUser = async (req, res) => {
   } catch (error) {
     rea.status(500).json(error);
   }
-};
+}
 
 const getAllUsers = async (req, res) => {
   const query = req.query.new;
