@@ -5,23 +5,19 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
-  // Validate input
+
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
     return res.status(400).send("Missing required fields");
   }
 
-  // Check for existing users
   const existingUser = await User.findOne({ $or: [{ username }, { email }] });
   if (existingUser) {
     return res.status(400).send("User already exists");
   }
 
-  // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-
-  // const user = new User(req.body);
 
   const user = new User({
     username,
@@ -62,28 +58,27 @@ const getAllUsers = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!user) return res.status(404).send("User not found");
-
-    // Remove password and updated_at fields from the response
-    user.password = undefined;
-    user.updated_at = undefined;
 
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(req.body.password, salt);
-      user.password = hashedPassword;
+      req.body.password = hashedPassword;
     }
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!user) return res.status(404).send("User not found");
 
     res.send(user);
   } catch (error) {
     res.status(500).send("Error updating user");
   }
-};
+}
 
-// exports.deleteUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id
