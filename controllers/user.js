@@ -69,6 +69,12 @@ const updateUser = async (req, res) => {
     user.password = undefined;
     user.updated_at = undefined;
 
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      user.password = hashedPassword;
+    }
+
     res.send(user);
   } catch (error) {
     res.status(500).send("Error updating user");
