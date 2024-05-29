@@ -1,8 +1,8 @@
 const User = require("../models/user.js")
 const Project = require("../models/project.js")
 const Task = require("../models/task.js")
-
-// const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
   // Validate input
@@ -17,11 +17,17 @@ const registerUser = async (req, res) => {
     return res.status(400).send("User already exists");
   }
 
-  // // Hash password
-  // const salt = await bcrypt.genSalt(10);
-  // const hashedPassword = await bcrypt.hash(password, salt);
+  // Hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
 
-  const user = new User(req.body);
+  // const user = new User(req.body);
+
+  const user = new User({
+    username,
+    email,
+    password: hashedPassword,
+  });
 
   try {
     await user.save();
@@ -83,10 +89,45 @@ const deleteUser = async (req, res) => {
   }
 }
 
+const loginUser = async (req, res) => {
+  try {
+    // Validate input
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).send("Missing required fields");
+    }
+
+    // Check for existing user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).send("Invalid password");
+    }
+
+    // Generate token
+    console.log("Generating token...");
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    })
+    console.log("Token generated.");
+
+    res.send({ token, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 module.exports = {
   registerUser,
   getUser,
   getAllUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  loginUser,
 }
