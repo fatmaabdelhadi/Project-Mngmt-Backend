@@ -21,13 +21,7 @@ const registerUser = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  // const user = new User(req.body);
-
-  const user = new User({
-    username,
-    email,
-    password: hashedPassword,
-  });
+  const user = new User({...req.body, password: hashedPassword })
 
   try {
     await user.save();
@@ -59,27 +53,23 @@ const getAllUsers = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!user) return res.status(404).send("User not found");
 
-    // Remove password and updated_at fields from the response
-    user.password = undefined;
-    user.updated_at = undefined;
+  try {
+    const user = await User.findById(req.params.id)
+    if (!user) return res.status(404).send("User not found")
 
     if (req.body.password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(req.body.password, salt);
-      user.password = hashedPassword;
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(req.body.password, salt)
+      user.password = hashedPassword
     }
 
-    res.send(user);
+    await user.save();
+    res.send(user)
   } catch (error) {
-    res.status(500).send("Error updating user");
+    res.status(500).send("Error updating user")
   }
-};
+}
 
 // exports.deleteUser = async (req, res) => {
 const deleteUser = async (req, res) => {
