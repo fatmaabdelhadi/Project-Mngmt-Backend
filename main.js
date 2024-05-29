@@ -4,12 +4,10 @@ const projectRoute = require('./routes/project.js')
 const taskRoute = require('./routes/task.js')
 let lodash = require('lodash');
 const express = require('express');
-const app = express()
-app.use(express.json()) // middleware
+const app = express();
+app.use(express.json()); // middleware
 const mongoose = require("mongoose")
-const cors = require('cors')
 const dotenv = require("dotenv")
-app.use(cors())
 dotenv.config()
 
 app.use("/api/users", userRoute)
@@ -22,6 +20,10 @@ mongoose
     .catch((err) => {
         console.log(err)
     })
+
+app.get("/api/test", ()=>{
+    console.log("test")
+})
 
 app.listen(process.env.PORT || 5000, ()=> {
     console.log("Backend server is running")
