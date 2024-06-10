@@ -26,7 +26,7 @@ const createProject = async (req, res) => {
 const getProject = async (req, res) => {
   const id = req.params.id
   try {
-    const project = await Project.findById(id).populate("projectManager")
+    const project = await Project.findById(id)
     if (project) res.json(project);
   } catch (error) {
     console.error('Error fetching project:', error)
