@@ -2,22 +2,22 @@ const User = require("../models/user.js")
 const Project = require("../models/project.js")
 const Task = require("../models/task.js")
 const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
 
 const registerUser = async (req, res) => {
 
-  const { username, email, password } = req.body;
+  const { username, email, password } = req.body
   if (!username || !email || !password) {
-    return res.status(400).send("Missing required fields");
+    return res.status(400).send("Missing required fields")
   }
 
-  const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+  const existingUser = await User.findOne({ $or: [{ username }, { email }] })
   if (existingUser) {
-    return res.status(400).send("User already exists");
+    return res.status(400).send("User already exists")
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
 
   const user = new User({
     username,
@@ -25,34 +25,34 @@ const registerUser = async (req, res) => {
     password: hashedPassword,
     profile: req.body.profile,
     preferences: req.body.preferences
-  });
+  })
 
   try {
-    await user.save();
-    res.send(`User with ID ${user._id} created successfully`);
+    await user.save()
+    res.send(`User with ID ${user._id} created successfully`)
   } catch (error) {
-    res.status(500).send("Error registering user");
+    res.status(500).send("Error registering user")
   }
-};
+}
 
 const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    res.status(200).json(user);
+    const user = await User.findById(req.params.id)
+    res.status(200).json(user)
   } catch (error) {
-    rea.status(500).json(error);
+    rea.status(500).json(error)
   }
-};
+}
 
 const getAllUsers = async (req, res) => {
-  const query = req.query.new;
+  const query = req.query.new
   try {
     const users = query
       ? await User.find().sort({ _id: -1 }).limit(5)
-      : await User.find();
-    res.status(200).json(users);
+      : await User.find()
+    res.status(200).json(users)
   } catch (error) {
-    res.status(500).send("Error retrieving users");
+    res.status(500).send("Error retrieving users")
   }
 }
 
@@ -60,31 +60,31 @@ const updateUser = async (req, res) => {
   try {
 
     if (req.body.password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(req.body.password, salt);
-      req.body.password = hashedPassword;
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(req.body.password, salt)
+      req.body.password = hashedPassword
     }
 
     const user = await User.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
-    );
+    )
 
-    if (!user) return res.status(404).send("User not found");
+    if (!user) return res.status(404).send("User not found")
 
-    res.send(user);
+    res.send(user)
   } catch (error) {
-    res.status(500).send("Error updating user");
+    res.status(500).send("Error updating user")
   }
 }
 
 const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id
-    const user = await User.findByIdAndDelete(userId);
+    const user = await User.findByIdAndDelete(userId)
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send("User not found")
     }
     res.send(user)
   } catch (error) {
@@ -95,34 +95,34 @@ const deleteUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     // Validate input
-    const { email, password } = req.body;
+    const { email, password } = req.body
     if (!email || !password) {
-      return res.status(400).send("Missing required fields");
+      return res.status(400).send("Missing required fields")
     }
 
     // Check for existing user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
     if (!user) {
-      return res.status(400).send("User not found");
+      return res.status(400).send("User not found")
     }
 
     // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
-      return res.status(400).send("Invalid password");
+      return res.status(400).send("Invalid password")
     }
 
     // Generate token
-    console.log("Generating token...");
+    console.log("Generating token...")
     const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
       expiresIn: "1h",
     })
-    console.log("Token generated.");
+    console.log("Token generated.")
 
-    res.send({ token, user });
+    res.send({ token, user })
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
+    console.error(error)
+    res.status(500).send("Internal Server Error")
   }
 }
 
