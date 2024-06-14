@@ -19,6 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongodb": "^6.5.0",
-    "mongoose": "^8.4.0"
+    "mongoose": "^8.4.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }

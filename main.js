@@ -8,6 +8,8 @@ const app = express();
 app.use(express.json()); // middleware
 const mongoose = require("mongoose")
 const dotenv = require("dotenv")
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 dotenv.config()
 
 app.use("/api/users", userRoute)
@@ -28,3 +30,24 @@ app.get("/api/test", ()=>{
 app.listen(process.env.PORT || 5000, ()=> {
     console.log("Backend server is running")
 })
+
+const options = {
+    definition: {
+        openai: "3.0.0",
+        info: {
+            title: "API Library",
+            version: "1.0.0",
+            description: "Project Management API Library"
+        },
+        servers: [
+            {
+                url: "http://pm-platform-backend.onrender.com"
+                // url: "http://localhost:5000" // local testing
+            }
+        ]
+    },
+    apis: ["./routes/*.js"]
+}
+
+const specs = swaggerJsDoc(options)
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
