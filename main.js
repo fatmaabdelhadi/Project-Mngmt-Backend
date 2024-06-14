@@ -41,8 +41,8 @@ const options = {
         },
         servers: [
             {
-                // url: "http://pm-platform-backend.onrender.com"
-                url: "http://localhost:5000" // local testing
+                url: "http://pm-platform-backend.onrender.com"
+                // url: "http://localhost:5000" // local testing
             }
         ]
     },
