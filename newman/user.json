@@ -1,0 +1,151 @@
+{
+  "info": {
+    "name": "PM Backend: User",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User SignUp",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "json",
+          "raw": "{\"username\":\"Amira Amin\",\"email\":\"amira@example.com\",\"password\":\"amira\",\"role\":{\"managedProjects\":[\"project123\",\"project456\"],\"contributedTasks\":[\"task001\",\"task002\",\"task003\"]},\"profile\":{\"full_name\":\"Amira Ali Hassan\",\"job_title\":\"Graphic Designer\",\"contact_info\":{\"email\":\"amira@example.com\",\"phone\":\"+9876543210\",\"address\":\"789 Lotus St, Alexandria, Egypt\"}},\"preferences\":{\"theme\":\"light\",\"notifications\":{\"email\":true,\"sms\":false}}}"
+        },
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/users/signup/",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "signup",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "User LogIn",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "json",
+          "raw": "{\n  \"email\": \"fatmaabdelhadi@example.com\",\n  \"password\": \"fatmaabdelhadi\"\n}"
+        },
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/users/login/",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "login",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/users/all",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Find User by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/users/find/6629442719d2130518b601a8",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "find",
+            "6629442719d2130518b601a8"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update User by ID",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "json",
+          "raw": "{\n  \"password\": \"fatmaabdelhadi\"\n}"
+        },
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/users/update/6629442719d2130518b601a8",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "update",
+            "6629442719d2130518b601a8"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete User by ID",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/users/delete/6666ea80573943185e4fbf5a",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "delete",
+            "6666ea80573943185e4fbf5a"
+          ]
+        }
+      }
+    }
+  ]
+}

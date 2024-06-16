@@ -1,0 +1,147 @@
+{
+  "info": {
+    "name": "PM Backend: Project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Project",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "json",
+          "raw": "{\r\n  \"projectName\": \"E-Commerce Platform\",\r\n  \"projectManager\": \"6629442719d2130518b601a8\",\r\n  \"status\": \"in progress\",\r\n  \"description\": \"ana fatma bgarab el database\"\r\n} \r\n"
+        },
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/projects/create",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "projects",
+            "create"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Projects",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/projects/all/",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "projects",
+            "all",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Find Project by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/projects/find/6638cb129ebc1e809dd23fe4",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "projects",
+            "find",
+            "6638cb129ebc1e809dd23fe4"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Projects by User ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/projects/user/6629442719d2130518b601a8",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "projects",
+            "user",
+            "6629442719d2130518b601a8"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Project by ID",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "json",
+          "raw": "{\n  \"teamMembers\": [\n      \"6629442719d2130518b601a6\",\n      \"6629442719d2130518b601a9\",\n      \"6629442719d2130518b601aa\",\n      \"665768ca63f826d43bbb2223\"\n    ]\n}"
+        },
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/projects/update/6638cb129ebc1e809dd23fe4",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "projects",
+            "update",
+            "6638cb129ebc1e809dd23fe4"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Project by ID",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/projects/delete/6666fa5e1b13a8027d8c3ce3",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "projects",
+            "delete",
+            "6666fa5e1b13a8027d8c3ce3"
+          ]
+        }
+      }
+    }
+  ]
+}

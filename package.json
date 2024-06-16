@@ -4,13 +4,15 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon main.js"
+    "start": "nodemon main.js",
+    "test": "newman run newman/project.json && newman run newman/task.json && newman run newman/user.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.2"
+    "nodemon": "^3.1.2",
+    "newman": "^5.0.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

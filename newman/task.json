@@ -1,0 +1,168 @@
+{
+  "info": {
+    "name": "PM Backend: Task",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Task",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "json",
+          "raw": "{\n  \"taskName\": \"E-Commerce Platform\",\n  \"status\": \"In Progress\",\n  \"priority\": \"Urgent\",\n  \"description\": \"lorem ipsum testing\",\n  \"startDate\": \"2024-05-23T18:25:43.511Z\",\n  \"endDate\": \"2024-06-08T18:25:43.511Z\",\n  \"comments\": [\n    {\n      \"_id\": \"6666fb221b13a8027d8c3cfb\",\n      \"text\": \"Finished initial implementation of file upload endpoints.\"\n    },\n    {\n      \"_id\": \"6666fb221b13a8027d8c3cfc\",\n      \"text\": \"Reviewed the initial implementation. Looks good overall, but needs some minor adjustments.\"\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/tasks/create",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "tasks",
+            "create"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Tasks",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/tasks/all",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "tasks",
+            "all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Task by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/tasks/find/6629443c19d2130518b601af",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "tasks",
+            "find",
+            "6629443c19d2130518b601af"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Tasks by User ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/tasks/user/6629442719d2130518b601a6",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "tasks",
+            "user",
+            "6629442719d2130518b601a6"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Tasks by Project ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/tasks/project/6638cb129ebc1e809dd23fe4",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "tasks",
+            "project",
+            "6638cb129ebc1e809dd23fe4"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Task",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "json",
+          "raw": "{\r\n  \"description\": \"lorem ipsum testing update\",\r\n  \"startDate\": \"2024-05-24T00:00:00.000Z\",\r\n  \"endDate\": \"2024-06-09T00:00:00.000Z\"\r\n} "
+        },
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/tasks/update/6666fc8f1b13a8027d8c3cfe",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "tasks",
+            "update",
+            "6666fc8f1b13a8027d8c3cfe"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Task",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://pm-platform-backend.onrender.com/api/tasks/delete/6629443c19d2130518b601ae",
+          "protocol": "https",
+          "host": [
+            "pm-platform-backend",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "tasks",
+            "delete",
+            "6629443c19d2130518b601ae"
+          ]
+        }
+      }
+    }
+  ]
+}
