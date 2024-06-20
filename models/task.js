@@ -23,11 +23,18 @@ const Task = new Schema({
     cost: Number,
     startDate: Date,
     endDate: Date,
-    dueDate: Date,
-    dependancy: {
+    duration: {
+        type: Number,
+    },
+    ES: Number,
+    EF: Number,
+    LS: Number,
+    LF: Number,
+    TS: Number,
+    dependency: [{
         type: Schema.Types.ObjectId,
         ref: 'Task'
-    },
+    }],
     comments: [
         {
             user: { type: ObjectId, ref: 'User' },
