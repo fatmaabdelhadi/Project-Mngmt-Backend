@@ -79,10 +79,6 @@ const getAllUserProjects = async (req, res) => {
 }
 
 module.exports = {
-  getAllUserProjects
-}
-
-module.exports = {
   createProject,
   getProject,
   getAllProjects,
