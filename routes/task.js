@@ -3,6 +3,7 @@ const router = express.Router()
 const taskController = require('../controllers/task')
 
 router.post('/create', taskController.createTask)
+router.post('/calculate/:projectId', taskController.calculateLateStartAndFinish)
 router.get('/find/:id', taskController.getTask)
 router.get('/all', taskController.getAllTasks)
 router.put('/update/:id', taskController.updateTask)
@@ -84,6 +85,28 @@ router.get('/project/:projectId', taskController.getAllProjectTasks) // Project 
  *         description: Missing required fields or task already exists
  *       500:
  *         description: Error creating task
+ */
+
+/**
+ * @swagger
+ * /api/calculate/{projectId}:
+ *   post:
+ *     summary: Calculate Late Start and Late Finish (LS and LF) by Project ID
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The project ID
+ *     responses:
+ *       200:
+ *         description: The task description by ID
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**

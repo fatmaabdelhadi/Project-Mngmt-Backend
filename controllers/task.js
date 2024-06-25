@@ -1,6 +1,7 @@
-const req = require("express/lib/request");
-const { ObjectId } = require("mongoose").Types;
-const Task = require("../models/task");
+const req = require("express/lib/request")
+const { ObjectId } = require("mongoose").Types
+const Task = require("../models/task")
+const Project = require("../models/project")
 
 const createTask = async (req, res) => {
     const {
@@ -16,36 +17,36 @@ const createTask = async (req, res) => {
         endDate,
         dependency,
         comments,
-    } = req.body;
+    } = req.body
 
     if (!taskName || !startDate || !endDate) {
-        return res.status(400).send("Missing required fields");
+        return res.status(400).send("Missing required fields")
     }
 
-    const existingTask = await Task.findOne({ taskName, taskCreator });
+    const existingTask = await Task.findOne({ taskName, taskCreator })
     if (existingTask) {
-        return res.status(400).send("Task already exists");
+        return res.status(400).send("Task already exists")
     }
 
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
-    const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)); // Calculate duration in days
+    const start = new Date(startDate).getTime()
+    const end = new Date(endDate).getTime()
+    const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) // Calculate duration in days
 
     let ES = 0
     let EF = ES + duration
 
     if (dependency && dependency.length > 0) {
         try {
-            const dependencyTasks = await Task.find({ _id: { $in: dependency } });
+            const dependencyTasks = await Task.find({ _id: { $in: dependency } })
 
             if (dependencyTasks.length > 0) {
-                const maxEF = Math.max(...dependencyTasks.map(task => task.EF));
-                ES = maxEF;
-                EF = ES + duration;
+                const maxEF = Math.max(...dependencyTasks.map(task => task.EF))
+                ES = maxEF
+                EF = ES + duration
             }
         } catch (error) {
-            console.error('Error fetching dependency tasks:', error);
-            return res.status(500).json({ error: 'Internal server error' });
+            console.error('Error fetching dependency tasks:', error)
+            return res.status(500).json({ error: 'Internal server error' })
         }
     }
 
@@ -67,13 +68,74 @@ const createTask = async (req, res) => {
         duration,
         dependency,
         comments,
-    });
+    })
 
     try {
-        await task.save();
-        res.send(`Task with ID ${task._id} created successfully`);
+        await task.save()
+        res.send(`Task with ID ${task._id} created successfully`)
     } catch (error) {
-        res.status(500).send("Error creating task");
+        res.status(500).send("Error creating task")
+    }
+}
+
+const calculateLateStartAndFinish = async (req, res) => { // Same ES, EF as LS, LF
+
+    const projectId = req.params.projectId
+    
+    try {
+        const tasks = await Task.find({ project: projectId })
+
+        if (tasks.length === 0) {
+            return res.status(404).json({ error: "No tasks found for the project" })
+        }
+
+        const projectEndDate = Math.max(...tasks.map(task => task.EF))
+        const startingTasks = tasks.filter(task => task.dependency.length === 0)
+
+        for (const task of startingTasks) {
+            task.ES = 0
+            task.EF = task.ES + task.duration
+            task.LF = projectEndDate
+            task.LS = task.LF - task.duration
+            await task.save()
+        }
+
+        const sortedTasks = tasks.sort((a, b) => b.EF - a.EF) // Sort tasks by EF in descending order
+
+        for (const task of sortedTasks) { // Tasks with dependencies
+            if (task.dependency.length > 0) {
+                const dependentTasks = await Task.find({ _id: { $in: task.dependency } })
+
+                if (dependentTasks.length === 0) {
+                    return res.status(404).json({ error: `No dependent tasks found for task ${task._id}` })
+                }
+
+                task.LS = Math.max(...dependentTasks.map(depTask => depTask.EF))
+                task.LF = task.LS + task.duration
+                await task.save()
+
+                for (const dependentTask of dependentTasks) {
+
+                    const successorTasks = await Task.find({ dependency: dependentTask._id })
+
+                    if (successorTasks.length > 0) {
+                        dependentTask.LF = Math.min(...successorTasks.map(succTask => succTask.LS))
+                    } else {
+                        dependentTask.LF = task.LS
+                    }
+
+                    dependentTask.LS = dependentTask.LF - dependentTask.duration
+                    await dependentTask.save()
+                }
+            }
+        }
+
+        await Project.findByIdAndUpdate(projectId, { endDate: new Date(projectEndDate) })
+
+        res.send(`LS and LF for project with ID ${projectId} calculated successfully`)
+    } catch (error) {
+        console.error("Error calculating late start and finish:", error)
+        res.status(500).json({ error: "Internal server error" })
     }
 }
 
@@ -85,7 +147,7 @@ const getTask = async (req, res) => {
 
 const getAllProjectTasks = async (req, res) => {
     try {
-        const projectId = req.params.projectId;
+        const projectId = req.params.projectId
         const tasks = await Task.find({ project: projectId })
         res.status(200).json(tasks)
     } catch (error) {
@@ -97,7 +159,7 @@ const getAllProjectTasks = async (req, res) => {
 const getAllTasks = async (req, res) => {
     try {
         const tasks = await Task.find()
-        res.json(tasks);
+        res.json(tasks)
     } catch (error) {
         console.error('Error fetching tasks:', error)
         res.status(500).json({ error: 'Internal server error' })
@@ -106,7 +168,7 @@ const getAllTasks = async (req, res) => {
 
 const getAllUserTasks = async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const userId = req.params.userId
         const tasks = await Task.find({ assignedUsers: userId })
         res.status(200).json(tasks)
     } catch (error) {
@@ -127,14 +189,14 @@ const updateTask = async (req, res) => {
 
 const deleteTask = async (req, res) => {
     try {
-        const taskId = req.params.id;
-        const task = await Task.findByIdAndDelete(taskId);
+        const taskId = req.params.id
+        const task = await Task.findByIdAndDelete(taskId)
         if (!task) {
-            return res.status(404).send("Task not found");
+            return res.status(404).send("Task not found")
         }
-        res.send(task);
+        res.send(task)
     } catch (error) {
-        res.status(500).send("Error deleting task");
+        res.status(500).send("Error deleting task")
     }
 }
 
@@ -144,6 +206,7 @@ module.exports = {
     getAllUserTasks,
     getAllProjectTasks,
     createTask,
+    calculateLateStartAndFinish,
     updateTask,
     deleteTask
 }
