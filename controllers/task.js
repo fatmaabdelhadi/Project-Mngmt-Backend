@@ -78,7 +78,6 @@ const createTask = async (req, res) => {
     }
 }
 
-
 const calculateLateStartAndFinish = async (req, res) => {
 
     const projectId = req.params.projectId
