@@ -78,6 +78,46 @@ const createTask = async (req, res) => {
     }
 }
 
+const calculateEarlyStartAndFinish = async (req, res) => {
+    
+    const projectId = req.params.projectId
+
+    try {
+        const tasks = await Task.find({ project: projectId })
+
+        if (tasks.length === 0) {
+            return res.status(404).json({ error: "No tasks found for the project" })
+        }
+
+        const sortedTasks = tasks.sort((a, b) => a.EF - b.EF) // Sort ascendingly
+
+        for (let i = 0; i < sortedTasks.length; i++){
+
+            const task = sortedTasks[i]
+
+            if (sortedTasks[0]){ // First task
+                task.ES = 0
+            } else {
+                task.ES = sortedTasks[i-1].EF
+                if (dependencyTasks.length > 1) {
+                   const maxEF = Math.max(...task.dependency.map(task => task.EF))
+                   task.ES = maxEF
+                }
+            }
+            
+            task.EF = task.ES + task.duration
+        }
+
+        const projectStartDate = Math.min(...tasks.map(task => task.ES))
+        await Project.findByIdAndUpdate(projectId, { startDate: new Date(projectStartDate) })
+        res.send(`ES and EF for project with ID ${projectId} calculated successfully`)
+        
+    } catch (error) {
+        console.error("Error calculating early start and finish:", error)
+        res.status(500).json({ error: "Internal server error" })
+    }
+}
+
 const calculateLateStartAndFinish = async (req, res) => {
 
     const projectId = req.params.projectId
@@ -95,7 +135,6 @@ const calculateLateStartAndFinish = async (req, res) => {
         for (let i = 0; i < sortedTasks.length; i++){
 
             const task = sortedTasks[i]
-            const dependentTasks = await Task.find({ _id: { $in: task.dependency } })
 
             if (sortedTasks[0]){ // First in desc sorted array (last task)
                 task.LF = task.EF
@@ -107,7 +146,7 @@ const calculateLateStartAndFinish = async (req, res) => {
                     task.LF = sortedTasks[i-1].LF
                 }
                 if (dependentTasks > 1) {
-                    task.LF = Math.min(...dependentTasks.map(dependentTask => dependentTask.LS))
+                    task.LF = Math.min(...task.dependency.map(dependentTask => dependentTask.LS))
                 }
             }
             
@@ -190,6 +229,7 @@ module.exports = {
     getAllUserTasks,
     getAllProjectTasks,
     createTask,
+    calculateEarlyStartAndFinish,
     calculateLateStartAndFinish,
     updateTask,
     deleteTask
