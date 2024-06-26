@@ -78,7 +78,8 @@ const createTask = async (req, res) => {
     }
 }
 
-const calculateLateStartAndFinish = async (req, res) => { // Same ES, EF as LS, LF
+
+const calculateLateStartAndFinish = async (req, res) => {
 
     const projectId = req.params.projectId
     
@@ -90,44 +91,28 @@ const calculateLateStartAndFinish = async (req, res) => { // Same ES, EF as LS, 
         }
 
         const projectEndDate = Math.max(...tasks.map(task => task.EF))
-        const startingTasks = tasks.filter(task => task.dependency.length === 0)
-
-        for (const task of startingTasks) {
-            task.ES = 0
-            task.EF = task.ES + task.duration
-            task.LF = projectEndDate
-            task.LS = task.LF - task.duration
-            await task.save()
-        }
-
         const sortedTasks = tasks.sort((a, b) => b.EF - a.EF) // Sort tasks by EF in descending order
 
-        for (const task of sortedTasks) { // Tasks with dependencies
-            if (task.dependency.length > 0) {
-                const dependentTasks = await Task.find({ _id: { $in: task.dependency } })
+        for (let i = 0; i < sortedTasks.length; i++){
 
-                if (dependentTasks.length === 0) {
-                    return res.status(404).json({ error: `No dependent tasks found for task ${task._id}` })
+            const task = sortedTasks[i]
+            const dependentTasks = await Task.find({ _id: { $in: task.dependency } })
+
+            if (sortedTasks[0]){ // First in desc sorted array (last task)
+                task.LF = task.EF
+            } else {
+
+                task.LF = sortedTasks[i-1].LS
+
+                if (task.ES === sortedTasks[i-1].ES) {
+                    task.LF = sortedTasks[i-1].LF
                 }
-
-                task.LS = Math.max(...dependentTasks.map(depTask => depTask.EF))
-                task.LF = task.LS + task.duration
-                await task.save()
-
-                for (const dependentTask of dependentTasks) {
-
-                    const successorTasks = await Task.find({ dependency: dependentTask._id })
-
-                    if (successorTasks.length > 0) {
-                        dependentTask.LF = Math.min(...successorTasks.map(succTask => succTask.LS))
-                    } else {
-                        dependentTask.LF = task.LS
-                    }
-
-                    dependentTask.LS = dependentTask.LF - dependentTask.duration
-                    await dependentTask.save()
+                if (dependentTasks > 1) {
+                    task.LF = Math.min(...dependentTasks.map(dependentTask => dependentTask.LS))
                 }
             }
+            
+            task.LS = task.LF - task.duration
         }
 
         await Project.findByIdAndUpdate(projectId, { endDate: new Date(projectEndDate) })
