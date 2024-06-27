@@ -113,7 +113,6 @@ const calculateEarlyStartAndFinish = async (req, res) => {
                             task.ES = sortedTasks[i+1].ES
                         }
                     }
-                    console.log(task.ES)
                 } catch (error) {
                     console.error('Error fetching dependency tasks:', error)
                     return res.status(500).json({ error: 'Internal server error' })
@@ -147,7 +146,6 @@ const calculateLateStartAndFinish = async (req, res) => {
             return res.status(404).json({ error: "No tasks found for the project" })
         }
 
-        const projectEndDate = Math.max(...tasks.map(task => task.EF))
         const sortedTasks = tasks.sort((a, b) => b.EF - a.EF) // Sort tasks by EF in descending order
 
         for (let i = 0; i < sortedTasks.length; i++){
@@ -169,9 +167,8 @@ const calculateLateStartAndFinish = async (req, res) => {
             }
             
             task.LS = task.LF - task.duration
+            await task.save()
         }
-
-        await Project.findByIdAndUpdate(projectId, { endDate: new Date(projectEndDate) })
 
         res.send(`LS and LF for project with ID ${projectId} calculated successfully`)
     } catch (error) {
