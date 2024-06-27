@@ -30,7 +30,6 @@ const Task = new Schema({
     EF: Number,
     LS: Number,
     LF: Number,
-    TS: Number,
     dependency: [{
         type: Schema.Types.ObjectId,
         ref: 'Task'
