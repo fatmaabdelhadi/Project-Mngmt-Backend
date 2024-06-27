@@ -249,14 +249,27 @@ const updateTask = async (req, res) => {
 
 const deleteTask = async (req, res) => {
     try {
-        const taskId = req.params.id
-        const task = await Task.findByIdAndDelete(taskId)
-        if (!task) {
-            return res.status(404).send("Task not found")
+        const taskId = req.params.id;
+        
+        const taskToDelete = await Task.findById(taskId);
+        if (!taskToDelete) {
+            return res.status(404).send("Task not found");
         }
-        res.send(task)
+
+        const dependentTasks = await Task.find({ dependency: taskId });
+
+        for (const dependentTask of dependentTasks) {
+            dependentTask.dependency = dependentTask.dependency.filter(depId => depId.toString() !== taskId.toString());
+            dependentTask.dependency = [...new Set([...dependentTask.dependency, ...taskToDelete.dependency])];
+            await dependentTask.save();
+        }
+
+        await Task.findByIdAndDelete(taskId);
+
+        res.send(taskToDelete);
     } catch (error) {
-        res.status(500).send("Error deleting task")
+        console.error("Error deleting task:", error);
+        res.status(500).send("Error deleting task");
     }
 }
 
