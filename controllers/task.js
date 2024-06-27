@@ -124,7 +124,7 @@ const calculateEarlyStartAndFinish = async (req, res) => {
         }
         
         const projectStartDate = Math.min(...tasks.map(task => task.startDate))
-        const projectEndDate = Math.max(...tasks.map(task => task.endDate));
+        const projectEndDate = Math.max(...tasks.map(task => task.endDate))
         await Project.findByIdAndUpdate(projectId, { startDate: new Date(projectStartDate) })
         await Project.findByIdAndUpdate(projectId, { endDate: new Date(projectEndDate) })
         res.send(`ES and EF for project with ID ${projectId} calculated successfully`)
@@ -215,16 +215,6 @@ const getAllUserTasks = async (req, res) => {
     }
 }
 
-// const updateTask = async (req, res) => { // Previous update function
-//     try {
-//         const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
-//         if (!task) return res.status(404).send("Task not found")
-//         res.send(task)
-//     } catch (error) {
-//         res.status(500).send("Error updating task")
-//     }
-// }
-
 const updateTask = async (req, res) => {
     try {
         const { startDate, endDate, ...updateData } = req.body
@@ -244,7 +234,6 @@ const updateTask = async (req, res) => {
 
             return res.send(task)
         } else {
-            // If only other properties are updated, handle them normally
             const task = await Task.findByIdAndUpdate(req.params.id, { ...updateData }, { new: true })
             if (!task) {
                 return res.status(404).send("Task not found")
