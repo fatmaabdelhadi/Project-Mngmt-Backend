@@ -7,6 +7,7 @@ router.post("/login", userController.loginUser)
 router.get('/find/:id', userController.getUser)
 router.get('/all', userController.getAllUsers)
 router.put('/update/:id', userController.updateUser)
+router.put('/changepassword/:id', userController.changeUserPassword)
 router.delete('/delete/:id', userController.deleteUser)
 
 /**
@@ -194,6 +195,37 @@ router.delete('/delete/:id', userController.deleteUser)
  *                         type: boolean
  *                       sms:
  *                         type: boolean
+ *     responses:
+ *       200:
+ *         description: The updated user description by ID
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error updating user
+ */
+
+/**
+ * @swagger
+ * /api/users/changepassword/{id}:
+ *   put:
+ *     summary: Change a user's password by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
  *         description: The updated user description by ID

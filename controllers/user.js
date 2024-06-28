@@ -56,27 +56,41 @@ const getAllUsers = async (req, res) => {
   }
 }
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res) => { // No password update
   try {
-
-    if (req.body.password) {
-      const salt = await bcrypt.genSalt(10)
-      const hashedPassword = await bcrypt.hash(req.body.password, salt)
-      req.body.password = hashedPassword
-    } else {
-      delete req.body.password
-    }
-
+    delete req.body.password // Remove password from req.body
     const user = await User.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     )
-
     if (!user) return res.status(404).send("User not found")
     res.send(user)
   } catch (error) {
     res.status(500).send("Error updating user")
+  }
+}
+
+const changeUserPassword = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { password } = req.body
+    if (!password) {
+      return res.status(400).send("New password is required")
+    }
+    const user = await User.findById(id)
+    if (!user) {
+      return res.status(404).send("User not found")
+    }
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    user.password = hashedPassword
+    await user.save()
+    // Respond with success message
+    res.send("Password updated successfully")
+  } catch (error) {
+    console.error("Error changing password:", error)
+    res.status(500).send("Error changing password")
   }
 }
 
@@ -132,6 +146,7 @@ module.exports = {
   getUser,
   getAllUsers,
   updateUser,
+  changeUserPassword,
   deleteUser,
   loginUser,
 }
