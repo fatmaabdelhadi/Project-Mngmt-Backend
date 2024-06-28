@@ -63,6 +63,8 @@ const updateUser = async (req, res) => {
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(req.body.password, salt)
       req.body.password = hashedPassword
+    } else {
+      delete req.body.password
     }
 
     const user = await User.findByIdAndUpdate(
@@ -72,7 +74,6 @@ const updateUser = async (req, res) => {
     )
 
     if (!user) return res.status(404).send("User not found")
-
     res.send(user)
   } catch (error) {
     res.status(500).send("Error updating user")
