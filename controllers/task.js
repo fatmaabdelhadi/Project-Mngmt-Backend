@@ -79,33 +79,23 @@ const createTask = async (req, res) => {
 }
 
 const calculateEarlyStartAndFinish = async (req, res) => {
-    
     const projectId = req.params.projectId
-
     try {
         const tasks = await Task.find({ project: projectId })
-
         if (tasks.length === 0) {
             return res.status(404).json({ error: "No tasks found for the project" })
         }
-
         const sortedTasks = tasks.sort((a, b) => { // Sort ascendingly by startDate
             const dateA = new Date(a.startDate)
             const dateB = new Date(b.startDate)
             return dateA - dateB
         })
-
         for (let i = 0; i < sortedTasks.length; i++){
-
             const task = sortedTasks[i]
-            
             task.ES = 0
-        
             if (task.dependency && task.dependency.length > 0) {
                 try {
-                    const dependencyTasks = await Task.find({ _id: { $in: task.dependency } })
-                    // const dependencyTasks = task.dependency
-        
+                    const dependencyTasks = await Task.find({ _id: { $in: task.dependency } })        
                     if (dependencyTasks.length > 0) {
                         const maxEF = Math.max(...dependencyTasks.map(task => task.EF)) 
                         task.ES = maxEF
@@ -118,17 +108,14 @@ const calculateEarlyStartAndFinish = async (req, res) => {
                     return res.status(500).json({ error: 'Internal server error' })
                 }
             }
-
             task.EF = task.ES + task.duration
             await task.save()
         }
-        
         const projectStartDate = Math.min(...tasks.map(task => task.startDate))
         const projectEndDate = Math.max(...tasks.map(task => task.endDate))
         await Project.findByIdAndUpdate(projectId, { startDate: new Date(projectStartDate) })
         await Project.findByIdAndUpdate(projectId, { endDate: new Date(projectEndDate) })
         res.send(`ES and EF for project with ID ${projectId} calculated successfully`)
-        
     } catch (error) {
         console.error("Error calculating early start and finish:", error)
         res.status(500).json({ error: "Internal server error" })
@@ -136,40 +123,32 @@ const calculateEarlyStartAndFinish = async (req, res) => {
 }
 
 const calculateLateStartAndFinish = async (req, res) => {
-
     const projectId = req.params.projectId
-    
     try {
         const tasks = await Task.find({ project: projectId })
 
         if (tasks.length === 0) {
             return res.status(404).json({ error: "No tasks found for the project" })
         }
-
         const sortedTasks = tasks.sort((a, b) => b.EF - a.EF) // Sort tasks by EF in descending order
-
         for (let i = 0; i < sortedTasks.length; i++){
-
             const task = sortedTasks[i]
-
-            if (sortedTasks[0]){ // First in desc sorted array (last task)
+            const dependentTasks = await Task.find({ dependency: task._id })
+            if (sortedTasks[0] == task){ // First in desc sorted array (last task)
                 task.LF = task.EF
             } else {
-
                 task.LF = sortedTasks[i-1].LS
-
                 if (task.ES === sortedTasks[i-1].ES) {
                     task.LF = sortedTasks[i-1].LF
                 }
-                if (dependentTasks > 1) {
-                    task.LF = Math.min(...task.dependency.map(dependentTask => dependentTask.LS))
+                if (dependentTasks.length > 1) {
+                    let minLS = Math.min(...dependentTasks.map(dependentTask => dependentTask.LS))
+                    task.LF = minLS
                 }
             }
-            
             task.LS = task.LF - task.duration
             await task.save()
         }
-
         res.send(`LS and LF for project with ID ${projectId} calculated successfully`)
     } catch (error) {
         console.error("Error calculating late start and finish:", error)
@@ -224,21 +203,17 @@ const updateTask = async (req, res) => {
             if (!task) {
                 return res.status(404).send("Task not found")
             }
-
             const start = startDate !== undefined ? new Date(startDate).getTime() : new Date(task.startDate).getTime()
             const end = endDate !== undefined ? new Date(endDate).getTime() : new Date(task.endDate).getTime()
             const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24))
-
             task.duration = duration
             await task.save()
-
             return res.send(task)
         } else {
             const task = await Task.findByIdAndUpdate(req.params.id, { ...updateData }, { new: true })
             if (!task) {
                 return res.status(404).send("Task not found")
             }
-
             return res.send(task)
         }
     } catch (error) {
@@ -255,17 +230,13 @@ const deleteTask = async (req, res) => {
         if (!taskToDelete) {
             return res.status(404).send("Task not found");
         }
-
         const dependentTasks = await Task.find({ dependency: taskId });
-
         for (const dependentTask of dependentTasks) {
             dependentTask.dependency = dependentTask.dependency.filter(depId => depId.toString() !== taskId.toString());
             dependentTask.dependency = [...new Set([...dependentTask.dependency, ...taskToDelete.dependency])];
             await dependentTask.save();
         }
-
         await Task.findByIdAndDelete(taskId);
-
         res.send(taskToDelete);
     } catch (error) {
         console.error("Error deleting task:", error);
