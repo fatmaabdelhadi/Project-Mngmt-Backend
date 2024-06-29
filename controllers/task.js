@@ -206,6 +206,8 @@ const updateTask = async (req, res) => {
             const start = startDate !== undefined ? new Date(startDate).getTime() : new Date(task.startDate).getTime()
             const end = endDate !== undefined ? new Date(endDate).getTime() : new Date(task.endDate).getTime()
             const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+            task.startDate = startDate !== undefined ? new Date(startDate) : task.startDate
+            task.endDate = endDate !== undefined ? new Date(endDate) : task.endDate
             task.duration = duration
             await task.save()
             return res.send(task)
