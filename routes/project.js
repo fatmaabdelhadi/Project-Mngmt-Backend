@@ -6,6 +6,7 @@ router.post('/create', projectController.createProject);
 router.get('/find/:id', projectController.getProject);
 router.get('/all', projectController.getAllProjects)
 router.put('/update/:id', projectController.updateProject)
+router.put('/percentage/:id', projectController.updateCompletionPercentage)
 router.delete('/delete/:id', projectController.deleteProject)
 router.get('/user/:userId', projectController.getAllUserProjects) // User Projects
 
@@ -174,6 +175,42 @@ router.get('/user/:userId', projectController.getAllUserProjects) // User Projec
  *     responses:
  *       200:
  *         description: The updated project description by ID
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Error updating project
+ */
+
+/**
+ * @swagger
+ * /api/projects/percentage/{id}:
+ *   put:
+ *     summary: Update a project completion percentage by ID
+ *     tags: [Projects]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The project ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               progress:
+ *                 type: object
+ *                 properties:
+ *                   completedTasks:
+ *                     type: number
+ *                   completetionPercentage:
+ *                     type: number
+ *     responses:
+ *       200:
+ *         description: Project percentage has been calculated successfully
  *       404:
  *         description: Project not found
  *       500:

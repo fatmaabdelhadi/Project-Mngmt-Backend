@@ -9,7 +9,7 @@ const Project = new Schema({
         type: ObjectId,
         ref: 'User'
     },
-    teamMembers: [{ // contributers
+    teamMembers: [{ // Task contributors
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
@@ -21,12 +21,9 @@ const Project = new Schema({
         ref: 'Task'
     }],
     progress: {
-        lateTasks: Number,
-        notStartedTasks: Number,
-        inProgress: Number,
         completedTasks: Number,
         totalTasks: Number,
-        completetionPercentage: Number
+        completionPercentage: Number
     }
 },
 {
