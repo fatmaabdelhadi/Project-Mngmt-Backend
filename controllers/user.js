@@ -3,6 +3,7 @@ const Project = require("../models/project.js")
 const Task = require("../models/task.js")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+require('dotenv').config()
 
 const registerUser = async (req, res) => {
 
