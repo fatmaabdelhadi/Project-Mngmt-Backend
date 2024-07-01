@@ -71,7 +71,7 @@ const updateCompletionPercentage = async (req, res) => {
   try {
     const projectId = req.params.id
     const project = await Project.findById(projectId)
-    const tasks = project.tasks
+    const tasks = await Task.find({ project: projectId });
     let count = 0
 
     for(let i = 0; i < tasks.length; i++){
