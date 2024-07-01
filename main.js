@@ -1,15 +1,14 @@
-
 const userRoute = require('./routes/user.js')
 const projectRoute = require('./routes/project.js')
 const taskRoute = require('./routes/task.js')
-let lodash = require('lodash');
-const express = require('express');
-const app = express();
-app.use(express.json()); // middleware
+let lodash = require('lodash')
+const express = require('express')
+const app = express()
+app.use(express.json())
 const mongoose = require("mongoose")
 const dotenv = require("dotenv")
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUI = require('swagger-ui-express')
 dotenv.config()
 
 app.use("/api/users", userRoute)
@@ -42,7 +41,6 @@ const options = {
         servers: [
             {
                 url: "http://pm-platform-backend.onrender.com"
-                // url: "http://localhost:5000" // local testing
             }
         ]
     },
