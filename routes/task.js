@@ -90,7 +90,7 @@ router.get('/project/:projectId', taskController.getAllProjectTasks) // Project 
 
 /**
  * @swagger
- * /api/calculateEarly/{projectId}:
+ * /api/tasks/calculateEarly/{projectId}:
  *   post:
  *     summary: Calculate Early Start and Early Finish (ES and EF) by Project ID
  *     tags: [Tasks]
@@ -112,7 +112,7 @@ router.get('/project/:projectId', taskController.getAllProjectTasks) // Project 
 
 /**
  * @swagger
- * /api/calculateLate/{projectId}:
+ * /api/tasks/calculateLate/{projectId}:
  *   post:
  *     summary: Calculate Late Start and Late Finish (LS and LF) by Project ID
  *     tags: [Tasks]
