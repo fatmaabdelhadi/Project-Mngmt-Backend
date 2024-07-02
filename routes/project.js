@@ -95,28 +95,6 @@ router.get('/user/:userId', projectController.getAllUserProjects) // User Projec
 
 /**
  * @swagger
- * /api/projects/{id}:
- *   delete:
- *     summary: Delete a project by ID
- *     tags: [Projects]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The project ID
- *     responses:
- *       200:
- *         description: The deleted project description by ID
- *       404:
- *         description: Project not found
- *       500:
- *         description: Error deleting project
- */
-
-/**
- * @swagger
  * /api/projects/update/{id}:
  *   put:
  *     summary: Update a project by ID
